@@ -42,5 +42,77 @@
     }, "Invalid timer", "stop with invalid timer");
   });
 
+  test("start with set, one timer", function() {
+    var id = timers.start("set");
+
+    var results = timers.getResults("set");
+    equal(results.length, 1, "there is one timer in the set");
+    equal(results.complete, 0, "none are yet complete");
+    equal(results.incomplete, 1, "one test is incomplete");
+    equal(results.elapsed, 0, "no tests have finished, elapsed is still 0");
+    equal(results.average, 0, "no tests have finished, no average");
+    equal(results.stdDeviation, 0, "no tests have finished, no standard deviation");
+
+    setTimeout(function() {
+      timers.stop(id);
+
+      var results = timers.getResults("set");
+      equal(results.length, 1, "there is one timer in the set");
+      equal(results.complete, 1, "the one test has completed");
+      equal(results.incomplete, 0, "none are incomplete");
+      ok(results.elapsed >= 500, "has some time elapsed?");
+      equal(results.average, results.elapsed, "one test finished, elapsed and average are the same");
+      equal(results.stdDeviation, 0, "one result, no standard deviation");
+
+      start();
+    }, 500);
+
+    stop();
+
+  });
+
+test("start with set, multiple timers", function() {
+  var id = timers.start("set2");
+  var id2 = timers.start("set2");
+  var id3 = timers.start("set2");
+
+  setTimeout(function() {
+    timers.stop(id);
+    var results = timers.getResults("set2");
+    equal(results.length, 3, "there are two timers in the set");
+    equal(results.complete, 1, "one test has completed");
+    equal(results.incomplete, 2, "one is incomplete");
+  }, 500);
+
+  setTimeout(function() {
+    timers.stop(id2);
+
+  }, 1000);
+
+  setTimeout(function() {
+    timers.stop(id3);
+
+    var results = timers.getResults("set2");
+    equal(results.length, 3, "there is one timer in the set");
+    equal(results.complete, 3, "the one test has completed");
+    equal(results.incomplete, 0, "none are incomplete");
+
+    console.log('elapsed: ' + results.elapsed);
+    ok(results.elapsed >= 1500, "has some time elapsed?");
+
+    console.log('average: ' + results.average);
+    ok(results.average >= 750 , "average >= 750");
+
+    console.log('stdDeviation: ' + results.stdDeviation);
+    ok(results.stdDeviation >= 1000, "standard deviation");
+
+    start();
+
+  }, 3000);
+
+  stop();
+
+});
+
 
 }());
