@@ -52,17 +52,27 @@ var Timers = (function() {
       }
 
       var average = complete > 0 ? elapsed / complete : 0;
-      var totalDeviation = 0;
-      var devSquared = 0;
-      // find the standard deviation
+      var varianceSquared = 0;
+
+      // find the total variance squared
       for(var i = 0, timerId; timerId = set[i]; ++i) {
         var timer = timers[timerId];
 
         if (timer.elapsed) {
-          var deviation = Math.round(timer.elapsed - average);
-          totalDeviation += deviation;
-          devSquared += Math.pow(deviation, 2);
+          var deviation = timer.elapsed - average;
+          varianceSquared += Math.pow(deviation, 2);
         }
+      }
+
+      var stdDeviation = 0;
+
+      if (!incomplete && complete) {
+        // Standard standard deviation formula
+        stdDeviation = Math.sqrt(varianceSquared / complete);
+      }
+      else if(incomplete && complete) {
+        // Use Bessel's correction for sample data
+        stdDeviation = Math.sqrt(varianceSquared / (complete - 1));
       }
 
       var results = {
@@ -71,7 +81,7 @@ var Timers = (function() {
         complete: complete,
         incomplete: incomplete,
         average: average,
-        stdDeviation: complete > 0 ? Math.sqrt(devSquared / complete) : 0
+        stdDeviation: stdDeviation
       };
 
       return results;

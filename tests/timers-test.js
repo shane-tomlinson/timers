@@ -5,10 +5,10 @@
 
   test("start", function() {
     var id = timers.start();
-    equal(typeof id, 'number', "start successful, we have an id");
+    equal(typeof id, "number", "start successful, we have an id");
 
     var id2 = timers.start();
-    equal(typeof id, 'number', "start successful, we have a second id");
+    equal(typeof id, "number", "start successful, we have a second id");
 
     notEqual(id, id2, "The two ids are not equal");
   });
@@ -87,6 +87,17 @@ test("start with set, multiple timers", function() {
   setTimeout(function() {
     timers.stop(id2);
 
+    var results = timers.getResults("set2");
+
+    console.log("elapsed: " + results.elapsed);
+    ok(results.elapsed >= 1500, "has some time elapsed?");
+
+    console.log("average: " + results.average);
+    ok(results.average >= 750 , "average >= 750");
+
+    console.log("stdDeviation: " + results.stdDeviation);
+    ok(results.stdDeviation >= 100, "standard deviation");
+
   }, 1000);
 
   setTimeout(function() {
@@ -97,13 +108,13 @@ test("start with set, multiple timers", function() {
     equal(results.complete, 3, "the one test has completed");
     equal(results.incomplete, 0, "none are incomplete");
 
-    console.log('elapsed: ' + results.elapsed);
+    console.log("elapsed: " + results.elapsed);
     ok(results.elapsed >= 1500, "has some time elapsed?");
 
-    console.log('average: ' + results.average);
-    ok(results.average >= 750 , "average >= 750");
+    console.log("average: " + results.average);
+    ok(results.average >= 1500 , "average >= 750");
 
-    console.log('stdDeviation: ' + results.stdDeviation);
+    console.log("stdDeviation: " + results.stdDeviation);
     ok(results.stdDeviation >= 1000, "standard deviation");
 
     start();
