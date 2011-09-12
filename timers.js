@@ -91,11 +91,21 @@ var Timers = (function() {
     }
   }
 
-  return {
+  var timers = {
     start: start,
     stop: stop,
     getResults: getResults
   };
+
+
+  // make this usable in a CommonJS environment
+  if(typeof exports !== 'undefined') {
+    for(var key in timers) {
+      exports[key] = timers[key];
+    }
+  }
+
+  return timers;
 
 }());
 
