@@ -4,6 +4,9 @@ with many web browsers.  This allows you to set timers, and create "sets" of
 timers where you can gather collective statistics such as total elapsed time,
 the average elapsed time, and standard deviation.
 
+This can be used in either the browser or as a CommonJS module (i.e.
+NodeJS).
+
 ##Usage
 
     // Start a timer that is not a member of a set
